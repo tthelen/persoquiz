@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Quiz</title>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <style>
+ body {
+     display: flex;
+     min-height: 100vh;
+     flex-direction: column;
+ }
+ main {
+     flex: 1 0 auto;
+ }
+        </style>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+      <nav class="orange darken-2" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'index' %}" class="brand-logo">WhoKnows?</a>
+      <ul class="right hide-on-med-and-down">
+          {% if request.user.is_authenticated %}
+            <li>{{ request.user }}</li>
+            <li><a href="{% url 'logout' %}">(Logout)</a></li>
+          {% endif %}
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+          {% if request.user.is_authenticated %}
+            <li>{{ request.user }}</li>
+            <li><a href="{% url 'logout' %}">(Logout)</a></li>
+          {% endif %}
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+<main>
+{% block heading %}
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">Who knows?</h1>
+      <div class="row center">
+        <h5 class="header col s12 light">Personalisierte Quizfragen</h5>
+      </div>
+      <br><br>
+    </div>
+  </div>
+{% endblock %}
+
+
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m3">
+          {% block leftnav %}
+                <h5>Bitte anmelden</h5>
+                <p class="light">Sie müssen sich nur anmelden, wenn Sie eigene Quizzes anlegen und Fragen bearbeiten wollen. Wenn Sie Fragen beantworten wollen, benötigen Sie dazu einen speziellen Link.</p>
+          {% endblock %}
+        </div>
+
+        <div class="col s12 m9">
+
+            {% block content %}
+            ERROR! No Content.
+            {% endblock %}
+
+
+      </div>
+
+    </div>
+    <br><br>
+  </div>
+    </main>
+  <footer class="page-footer orange">
+    <div class="container" >
+      <div class="row">
+        <div class="col s12">
+          <h5 class="white-text">Quiz</h5>
+          <p class="grey-text text-lighten-4">Who knows?</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="orange-text text-lighten-3" href="https://github.com/tthelen">Tobias Thelen</a>
+      </div>
+    </div>
+  </footer>
+
+
+      <!--JavaScript at end of body for optimized loading-->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        // code here
+        M.AutoInit();
+        {% block javascript_ready_code %}{% endblock %}
+    });
+    </script>
+    </body>
+</html>

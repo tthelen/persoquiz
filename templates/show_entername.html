@@ -1,0 +1,21 @@
+{% extends 'show_base.html' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">Bitte geben Sie Ihren Namen an</span>
+            <div>
+                <form action="{% url 'show' quiz.code %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-field">
+                      <input id="name" name="name" type="text">
+                      <label for="name">Name...</label>
+                    </div>
+                    <div>
+                      <button class="btn waves-effect waves-light" type="submit" name="action">Absenden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

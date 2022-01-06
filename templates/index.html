@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">{{ quiz.title }}</h1>
+      <br><br>
+    </div>
+  </div>
+{% endblock %}
+
+{% block leftnav %}
+<div style="position:sticky;top:0;height:1px;">
+
+    <h5>Dieses Quiz</h5>
+        <ul class="section table-of-contents">
+            {% if running_questions.count > 0 %}<li><a href="#running">Laufende Fragen</a></li>{% endif %}
+            {% if stopped_questions.count > 0 %}<li><a href="#stopped">Beendete Fragen</a></li>{% endif %}
+            {% if nonstarted_questions.count > 0 %}<li><a href="#nonstarted">Noch nicht gestartete Fragen</a></li>{% endif %}
+            <li><a href="#new">Neue Frage anlegen</a></li>
+        </ul>
+
+    <p>&nbsp;</p>
+    <h5>Deine Quizzes</h5>
+        <ul class="table-of-contents">
+            {% for a_quiz in quizzes %}
+                <li><a href="{% url 'quiz_index' qid=a_quiz.id %}" class="{% if a_quiz.id == quiz.id %}active{% endif %}">{{ a_quiz.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+    <p>&nbsp;</p>
+    <h5>Neues Quiz anlegen</h5>
+        <div class="container left">
+            <form action="{% url 'new_quiz' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="new" size=10 placeholder="Neues Quiz...">
+            <button type="submit" class="btn btn-flat">Anlegen</button>
+            </form>
+        </div>
+</div>
+
+
+{% endblock %}
+
+{% block content %}
+<div class="card blue-grey darken-1">
+    <div class="card-content white-text">
+        <span class="card-title"><a href="{{ quiz_url }}" target="_blank" class="white-text">{{ quiz_url }}</a></span>
+        <p>Unter dieser Adresse können Quizteilnehmer nach Angabe eines Namens die jeweils aktiven Fragen beantworten.</p>
+    </div>
+</div>
+    <p>&nbsp;</p>
+
+<h4 id="running" class="section scrollspy">Laufende Fragen</h4>
+{% if running_questions.count > 0 %}
+    {% for q in running_questions %}
+        {% include 'partials/question.html' with mode='edit' %}
+    {% endfor %}
+{% else %}
+    <p>&nbsp;</p><p class="light">Keine laufenden Fragen.</p><p>&nbsp;</p>
+{% endif %}
+
+{% if stopped_questions.count > 0 %}
+    <h4 id="stopped" class="section scrollspy">Beendete Fragen</h4>
+    {% for q in stopped_questions %}
+        {% include 'partials/question.html' with mode='edit' %}
+    {% endfor %}
+{% endif %}
+
+{% if nonstarted_questions.count > 0 %}
+    <h4 id="notstarted" class="section scrollspy">Noch nicht gestartete Fragen</h4>
+    {% for q in nonstarted_questions %}
+        {% include 'partials/question.html' with mode='edit' %}
+    {% endfor %}
+{% endif %}
+
+<h4 id="new" class="section scrollspy">Neue Frage anlegen</h4>
+
+<div class="card-panel">
+    <form action="{% url 'new_question' quiz.id %}" method="POST">
+        {% csrf_token %}
+        <div class="input-field">
+          <input id="new_question" name="q" type="text">
+          <label for="new_question">Die Frage ist...?</label>
+        </div>
+        <div>
+          <button class="btn waves-effect waves-light" type="submit" name="action">Anlegen</button>
+        </div>
+    </form>
+</div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<button data-target="modal-delquiz-{{ quiz.id }}" class="btn waves-effect waves-light red modal-trigger"><i class="material-icons left"> </i>Gesamtes Quiz löschen</button>
+<p>&nbsp;</p>
+
+<div id="modal-delquiz-{{ quiz.id }}" class="modal">
+    <div class="modal-content">
+        <h4>Frage löschen</h4>
+        <p>Wollen Sie das gesamte Quiz mit allen Fragen und Antworten wirklich löschen?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Nein, behalten</a>
+        <a href="{% url 'delete_quiz' quiz.id %}" class="waves-effect waves-red btn-flat">Ja, löschen</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript_ready_code %}
+    {% for q in running_questions %}
+        function load_answers() {
+            $(".answers").each( function(index) { $(this).load($(this).data('url')); });
+        };
+
+        load_answers();
+        setInterval(load_answers, 3000);
+
+        {% if messages %}
+            {% for message in messages %}
+                M.toast({html: '{{ message }}'})
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

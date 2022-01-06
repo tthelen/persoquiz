@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Benutzername und Passwort passen nicht. Bitte nochmal versuchen.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Bitte zum Anlegen von Quizzes einloggen.</p>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+    <div class="col-sm-3 mb-3">
+        <label for="username" class="form-label">Benutzername</label>
+        <input name="username" class="form-control" type="text" size="20" id="username">
+    </div>
+    <div class="col-sm-3 mb-3">
+        <label for="password" class="form-label">Passwort</label>
+        <input name="password" class="form-control" type="password" size="20" id="password">
+    </div>
+ <button type="submit" value="login" class="btn btn-primary mb3">Einloggen</button>
+ <input type="hidden" name="next" value="{{ next }}">
+</form>
+
+{% endblock %}

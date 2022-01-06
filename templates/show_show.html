@@ -1,0 +1,20 @@
+{% extends 'show_base.html' %}
+
+{% block content %}
+
+    <p>&nbsp;</p>
+    {% if q %}
+        {% include 'partials/question.html' with mode='show' %}
+    {% else %}
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Derzeit keine laufenden unbeantworteten Fragen.</span>
+                <script>window.setInterval(function () {window .location.reload();}, 3000);</script>
+            </div>
+        </div>
+    {% endif %}
+
+    <p>&nbsp;</p>
+    <h6>Angemeldet als {{ name }}. (<a href="{% url 'show' quiz.code %}?forget=1">ändern</a>)</h6>
+
+{% endblock %}

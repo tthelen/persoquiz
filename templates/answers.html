@@ -1,0 +1,16 @@
+{% if q.answer_set.count > 0 %}
+<div class="light">{{ q.answer_set.count }} Antworten</div>
+<table>
+    <thead>
+        <tr><td>Name</td><td>Antwort</td></tr>
+    </thead>
+    <tbody>
+        {% for a in q.answer_set.all %}
+            <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="light"> Noch keine Antworten. </div>
+{% endif %}
+<p>&nbsp;</p>

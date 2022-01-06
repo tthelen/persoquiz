@@ -1,0 +1,20 @@
+<button data-target="modal-answers-{{ q.id }}" class="btn btn-flat modal-trigger">{{ q.answer_set.count }} Antworten anzeigen</button>
+<div id="modal-answers-{{ q.id }}" class="modal" data-getanswers="{{ q.id }}">
+    <div class="modal-content">
+      <h4>Antworten zu &raquo;{{ q.text }}&laquo;</h4>
+        <table>
+            <thead>
+                <tr><td>Name</td><td>Antwort</td></tr>
+            </thead>
+            <tbody>
+                {% for a in q.answer_set.all %}
+                    <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect btn-flat">Schließen</a>
+    </div>
+</div>
+
