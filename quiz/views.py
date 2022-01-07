@@ -8,6 +8,7 @@ from django.db.models import Exists, OuterRef
 
 @login_required
 def index(request):
+    """Index view for logged in users. Redirects to user's first quiz or creates demo quiz if not quiz yet."""
     num_quizzes = Quiz.objects.filter(owner=request.user).count()
 
     # create a quiz if user has none
@@ -38,6 +39,7 @@ def quiz_index(request, qid):
 
 @login_required
 def new_question(request, qid):
+    """Create and save new question."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=qid)
     question_text = request.POST.get('q', None)
     if not question_text:
@@ -50,6 +52,7 @@ def new_question(request, qid):
 
 @login_required
 def delete_question(request, quiz_id, question_id):
+    """Completely delete a question and all answers."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
     quiz_url = request.build_absolute_uri(reverse('show', args=(quiz.code, )))
     question = get_object_or_404(Question, pk=question_id, quiz=quiz)
@@ -60,40 +63,40 @@ def delete_question(request, quiz_id, question_id):
 
 @login_required
 def delete_answers(request, quiz_id, question_id):
+    """Reset a question, delete all answers, stop it and set started_counter to 0"""
     quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
     quiz_url = request.build_absolute_uri(reverse('show', args=(quiz.code, )))
     question = get_object_or_404(Question, pk=question_id, quiz=quiz)
-    question.answer_set.all().delete()
-    question.started_times = 0
-    question.save()
+    question.reset()
     messages.success(request, "Antworten erfolgreich gelöscht.")
     return redirect('quiz_index',qid=quiz.id)
 
+
 @login_required
 def start_question(request, qid):
+    """Start a non-running question."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=qid)
     question_id = request.GET.get('id', None)
     if question_id:
         question = get_object_or_404(Question, pk=question_id, quiz=quiz)
-        question.active = True
-        question.started_times += 1
-        question.save()
+        question.start()
     return redirect('quiz_index',qid=quiz.id)
 
 
 @login_required
 def stop_question(request, qid):
+    """Stop a running question."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=qid)
     question_id = request.GET.get('id', None)
     if question_id:
         question = get_object_or_404(Question, pk=question_id, quiz=quiz)
-        question.active = False
-        question.save()
+        question.stop()
     return redirect('quiz_index',qid=quiz.id)
 
 
 @login_required
 def new_quiz(request):
+    """Create and save a new, empty quiz."""
     title = request.POST.get('new', None)
     if title and len(title)>0:
         q = Quiz(title=title, owner=request.user)
@@ -104,6 +107,7 @@ def new_quiz(request):
 
 @login_required
 def delete_quiz(request, quiz_id):
+    """Completely delete a quiz with all questions and answers."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
     t = quiz.title
     quiz.delete()
@@ -113,14 +117,17 @@ def delete_quiz(request, quiz_id):
 
 @login_required
 def answers(request, quiz_id, question_id):
+    """Return a partial HTML document for AJAX update of question results."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
     q = get_object_or_404(Question, pk=question_id, quiz=quiz)
     return render(request, 'answers.html', locals())
 
 
 class show(View):
+    """The participants view."""
 
     def get(self, request, quiz_code):
+        """Show a question (or a message that there's no question). Request username if none given yet."""
         quiz = get_object_or_404(Quiz, code=quiz_code)
         if request.GET.get('forget', 0) == '1':
             name = None
@@ -133,6 +140,7 @@ class show(View):
             return render(request, 'show_show.html', locals())
 
     def post(self, request, quiz_code):
+        """Save the username or an answer."""
         quiz = get_object_or_404(Quiz, code=quiz_code)
         if 'name' in request.POST:  # save name
             name = request.POST.get('name', None)

@@ -15,6 +15,6 @@
     {% endif %}
 
     <p>&nbsp;</p>
-    <h6>Angemeldet als {{ name }}. (<a href="{% url 'show' quiz.code %}?forget=1">ändern</a>)</h6>
+    <p class="light">Angemeldet als {{ name }}. (<a href="{% url 'show' quiz.code %}?forget=1">ändern</a>)</p>
 
 {% endblock %}

@@ -109,18 +109,14 @@
 {% endblock %}
 
 {% block javascript_ready_code %}
-    {% for q in running_questions %}
-        function load_answers() {
-            $(".answers").each( function(index) { $(this).load($(this).data('url')); });
-        };
-
-        load_answers();
-        setInterval(load_answers, 3000);
-
-        {% if messages %}
-            {% for message in messages %}
-                M.toast({html: '{{ message }}'})
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
+    function load_answers() {
+        $(".answers").each( function(index) { $(this).load($(this).data('url')); });
+    };
+    load_answers();
+    setInterval(load_answers, 3000);
+    {% if messages %}
+        {% for message in messages %}
+            M.toast({html: '{{ message }}'})
+        {% endfor %}
+    {% endif %}
 {% endblock %}
