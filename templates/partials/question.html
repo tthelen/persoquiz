@@ -32,6 +32,12 @@
     {% if mode == 'edit' %}
         <div class="card-action">
             <span id="results-{{ q.id }}"></span>
+            {% if not q.active %}
+            <a class="btn btn-flat" href="{% url 'start_question' quiz.id %}?id={{ q.id }}">Frage starten</a>
+            {% else %}
+            <a class="btn btn-flat" href="{% url 'stop_question' quiz.id %}?id={{ q.id }}">Frage stoppen</a>
+            {% endif %}
+
             <button data-target="modal-delanswers-{{ q.id }}" class="btn btn-flat modal-trigger">Zurücksetzen</button>
             <button data-target="modal-del-{{ q.id }}" class="btn btn-flat modal-trigger">Frage Löschen</button>
         </div>

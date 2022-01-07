@@ -25,7 +25,7 @@
     <body>
 
       <nav class="orange darken-2" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'index' %}" class="brand-logo">WhoKnows?</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'index' %}" class="brand-logo">SimQuiz</a>
       <ul class="right hide-on-med-and-down">
           {% if request.user.is_authenticated %}
             <li>{{ request.user }}</li>
@@ -48,7 +48,7 @@
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <br><br>
-      <h1 class="header center orange-text">Who knows?</h1>
+      <h1 class="header center orange-text">SimQuiz</h1>
       <div class="row center">
         <h5 class="header col s12 light">Personalisierte Quizfragen</h5>
       </div>
