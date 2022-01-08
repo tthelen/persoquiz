@@ -1,0 +1,30 @@
+{% extends 'present_base.html' %}
+
+{% block content %}
+    <h2 class="light center">{{ question.text }}</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col s12 m6">
+            <table class="striped">
+            <thead>
+                <tr><th>Name</th><th>Antwort</th></tr>
+            </thead>
+            <tbody>
+                {% for a in answers %}
+                    {% if forloop.counter == breakpoint %} {# ugly hacked way to create second column #}
+                        </tbody></table></div><div class="col s12 m6"><table class="striped"><thead><tr><th>Name</th><th>Antwort</th></tr></thead><tbody>
+                    {% endif %}
+                    <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript_ready_code %}
+    window.setInterval(function () {window.location.reload();}, 3000);
+{% endblock %}

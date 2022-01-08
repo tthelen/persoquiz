@@ -1,0 +1,25 @@
+{% extends 'present_base.html' %}
+
+{% block content %}
+    <div style="float:right;width:300px;height:300px;">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ quiz_url }}" width="300" size="300"><br>
+    <h5 class="light">{{ quiz_url }}</h5>
+    </div>
+
+    <h2 class="light">{{ quiz.title }}</h2>
+
+    <p>&nbsp;</p>
+    {% if question %}
+        <h1 class="header">{{ question.text }}</h1>
+    {% else %}
+        <h1 class="header">Derzeit keine laufende Frage vorhanden.</h1>
+    {% endif %}
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <h2 class="light">Rufen Sie {{ quiz_url }} auf,<br/> oder scannen Sie den QR-Code.</h2>
+
+{% endblock %}
+
+{% block javascript_ready_code %}
+    window.setInterval(function () {window.location.reload();}, 2500);
+{% endblock %}

@@ -27,6 +27,7 @@ urlpatterns = [
     path('new_quiz', views.new_quiz, name='new_quiz'),
     path('delete_quiz/<int:quiz_id>', views.delete_quiz, name='delete_quiz'),
     path('quiz/<int:qid>', views.quiz_index, name='quiz_index'),
+    re_path('present/(?P<quiz_code>[A-Z]{4})', views.present.as_view(), name='present'),
     re_path('(?P<quiz_code>[A-Z]{4})', views.show.as_view(), name='show'),
     path('', views.index, name='index'),
 ]
