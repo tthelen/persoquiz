@@ -11,6 +11,8 @@
     <p>&nbsp;</p>
     {% if question %}
         <h1 class="header">{{ question.text }}</h1>
+        <p>&nbsp;</p>
+        <h2 class="light">Abstimmung läuft, bislng {{ num_answers }} Antworten.</h2>
     {% else %}
         <h1 class="header">Derzeit keine laufende Frage vorhanden.</h1>
     {% endif %}
