@@ -12,7 +12,7 @@
     {% if question %}
         <h1 class="header">{{ question.text }}</h1>
         <p>&nbsp;</p>
-        <h2 class="light">Abstimmung läuft, bislng {{ num_answers }} Antworten.</h2>
+        <h2 class="light">Abstimmung läuft, bislang {{ num_answers }} Antwort{% if num_answers != 1 %}en{% endif %}.</h2>
     {% else %}
         <h1 class="header">Derzeit keine laufende Frage vorhanden.</h1>
     {% endif %}
