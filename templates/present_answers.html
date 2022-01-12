@@ -1,24 +1,27 @@
 {% extends 'present_base.html' %}
 
 {% block content %}
-    <h2 class="light center">{{ question.text }}</h2>
+<h2 class="light center">
+    {{ question.text }}
+    {% if request.user.is_authenticated %}<span class="right"><a href="{% url 'next_question' quiz.id %}" class="btn-floating btn-large waves-effect waves-light green" alt="Nächste Frage"><i class="material-icons left">skip_next</i></a></span>{% endif %}
+</h2>
 
 <div class="container">
     <div class="row">
-        <div class="col s12 m6">
-            <table class="striped">
-            <thead>
-                <tr><th>Name</th><th>Antwort</th></tr>
-            </thead>
-            <tbody>
-                {% for a in answers %}
-                    {% if forloop.counter == breakpoint %} {# ugly hacked way to create second column #}
-                        </tbody></table></div><div class="col s12 m6"><table class="striped"><thead><tr><th>Name</th><th>Antwort</th></tr></thead><tbody>
-                    {% endif %}
-                    <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
-                {% endfor %}
-            </tbody>
+        <div class="col s12 {% if breakpoint > 0 %}m6{% endif %} flow-text center">
+            <table class="striped" style="margin: 1em auto;">
+                <tbody>
+                    {% for a in answers %}
+                        {% if forloop.counter == breakpoint %} {# ugly hacked way to create second column #}
+                            </tbody></table></div><div class="col s12 m6"><table class="striped"><thead><tr><th>Name</th><th>Antwort</th></tr></thead><tbody>
+                        {% endif %}
+                        <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
+                    {% endfor %}
+                </tbody>
             </table>
+            {% if request.user.is_authenticated %}
+                <p style="margin-top:2em;"><a class="waves-effect waves-light btn green" href="{% url 'next_question' quiz.id %}"><i class="material-icons left">skip_next</i>nächste Frage</a></p>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -26,5 +29,7 @@
 {% endblock %}
 
 {% block javascript_ready_code %}
-    window.setInterval(function () {window.location.reload();}, 3000);
+    {% if not request.user.is_authenticated %}
+        window.setInterval(function () {window.location.reload();}, 3000);
+    {% endif %}
 {% endblock %}

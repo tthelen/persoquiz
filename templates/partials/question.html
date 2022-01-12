@@ -23,9 +23,9 @@
 
         {% if mode == 'edit' %}
             {% if not q.active %}
-            <a class="btn-floating waves-effect waves-light green right" href="{% url 'start_question' quiz.id %}?id={{ q.id }}"><i class="material-icons">play_arrow</i></a>
+            <a class="btn-floating waves-effect waves-light green right" href="{% url 'start_question' quiz.id q.id %}"><i class="material-icons">play_arrow</i></a>
             {% else %}
-            <a class="btn-floating waves-effect waves-light red right" href="{% url 'stop_question' quiz.id %}?id={{ q.id }}"><i class="material-icons">stop</i></a>
+            <a class="btn-floating waves-effect waves-light red right" href="{% url 'stop_question' quiz.id q.id %}"><i class="material-icons">stop</i></a>
             {% endif %}
         {% endif %}
     </div>
@@ -33,9 +33,9 @@
         <div class="card-action">
             <span id="results-{{ q.id }}"></span>
             {% if not q.active %}
-            <a class="btn btn-flat" href="{% url 'start_question' quiz.id %}?id={{ q.id }}">Frage starten</a>
+            <a class="btn btn-flat" href="{% url 'start_question' quiz.id q.id %}">Frage starten</a>
             {% else %}
-            <a class="btn btn-flat" href="{% url 'stop_question' quiz.id %}?id={{ q.id }}">Frage stoppen</a>
+            <a class="btn btn-flat" href="{% url 'stop_question' quiz.id q.id %}">Frage stoppen</a>
             {% endif %}
 
             <button data-target="modal-delanswers-{{ q.id }}" class="btn btn-flat modal-trigger">Zurücksetzen</button>

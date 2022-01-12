@@ -5,6 +5,12 @@ from django.views import View
 from .models import Quiz, Question, Answer
 from django.db.models import Exists, OuterRef
 
+# TODOs:
+# - Schrift in Ergebnisansicht größer
+# - Überschrift "Name" und "Antwort" weg
+# - Stop/Weiter-Knopf in Präsentationsansicht
+# - Präsentationsansicht authentifiziert
+
 
 @login_required
 def index(request):
@@ -34,7 +40,7 @@ def quiz_index(request, qid):
     quiz_presentation_url = request.build_absolute_uri(reverse('present', args=(quiz.code, )))
     running_questions = Question.objects.filter(quiz=quiz, active=True).order_by('-modified')
     stopped_questions = Question.objects.filter(quiz=quiz, active=False, started_times__gt=0).order_by('-modified')
-    nonstarted_questions = Question.objects.filter(quiz=quiz, active=False, started_times=0).order_by('-modified')
+    nonstarted_questions = Question.objects.filter(quiz=quiz, active=False, started_times=0).order_by('modified')
     return render(request, 'index.html', locals())
 
 
@@ -72,25 +78,36 @@ def delete_answers(request, quiz_id, question_id):
 
 
 @login_required
-def start_question(request, qid):
+def start_question(request, quiz_id, question_id):
     """Start a non-running question."""
-    quiz = get_object_or_404(Quiz, owner=request.user, id=qid)
-    question_id = request.GET.get('id', None)
-    if question_id:
-        question = get_object_or_404(Question, pk=question_id, quiz=quiz)
-        question.start()
+    quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
+    question = get_object_or_404(Question, pk=question_id, quiz=quiz)
+    question.start()
     return redirect('quiz_index',qid=quiz.id)
 
 
 @login_required
-def stop_question(request, qid):
+def stop_question(request, quiz_id, question_id):
     """Stop a running question."""
+    quiz = get_object_or_404(Quiz, owner=request.user, id=quiz_id)
+    question = get_object_or_404(Question, pk=question_id, quiz=quiz)
+    question.stop()
+    if request.GET.get('view', None) == 'present':
+        return redirect('present',quiz.code)
+    else:
+        return redirect('quiz_index',qid=quiz.id)
+
+
+@login_required
+def next_question(request, qid):
+    """Start next available question."""
     quiz = get_object_or_404(Quiz, owner=request.user, id=qid)
-    question_id = request.GET.get('id', None)
-    if question_id:
-        question = get_object_or_404(Question, pk=question_id, quiz=quiz)
-        question.stop()
-    return redirect('quiz_index',qid=quiz.id)
+    nextq = Question.objects.filter(quiz=quiz, active=False, started_times=0).order_by('modified').first()
+    if nextq:
+        nextq.start()
+    else:
+        messages.warning(request, "Es gibt keine weiteren Fragen.")
+    return redirect('present', quiz.code)
 
 
 @login_required
@@ -174,7 +191,6 @@ class present(View):
         # If not: Take question with answers that was stopped latest
         if not question:
             question = Question.objects.filter(Exists(Answer.objects.filter(question=OuterRef('pk'))), quiz=quiz, active=False).order_by('-modified').first()
-            print("question=",question)
             if question: # if there is a stopped question with answers
                 mode = "answers"
                 num_answers = question.answer_set.all().count()

@@ -16,8 +16,8 @@
     <h5>Dieses Quiz</h5>
         <ul class="section table-of-contents">
             {% if running_questions.count > 0 %}<li><a href="#running">Laufende Fragen</a></li>{% endif %}
-            {% if stopped_questions.count > 0 %}<li><a href="#stopped">Beendete Fragen</a></li>{% endif %}
             {% if nonstarted_questions.count > 0 %}<li><a href="#nonstarted">Noch nicht gestartete Fragen</a></li>{% endif %}
+            {% if stopped_questions.count > 0 %}<li><a href="#stopped">Beendete Fragen</a></li>{% endif %}
             <li><a href="#new">Neue Frage anlegen</a></li>
         </ul>
 
@@ -63,16 +63,16 @@
     <p>&nbsp;</p><p class="light">Keine laufenden Fragen.</p><p>&nbsp;</p>
 {% endif %}
 
-{% if stopped_questions.count > 0 %}
-    <h4 id="stopped" class="section scrollspy">Beendete Fragen</h4>
-    {% for q in stopped_questions %}
+{% if nonstarted_questions.count > 0 %}
+    <h4 id="notstarted" class="section scrollspy">Noch nicht gestartete Fragen</h4>
+    {% for q in nonstarted_questions %}
         {% include 'partials/question.html' with mode='edit' %}
     {% endfor %}
 {% endif %}
 
-{% if nonstarted_questions.count > 0 %}
-    <h4 id="notstarted" class="section scrollspy">Noch nicht gestartete Fragen</h4>
-    {% for q in nonstarted_questions %}
+{% if stopped_questions.count > 0 %}
+    <h4 id="stopped" class="section scrollspy">Beendete Fragen</h4>
+    {% for q in stopped_questions %}
         {% include 'partials/question.html' with mode='edit' %}
     {% endfor %}
 {% endif %}

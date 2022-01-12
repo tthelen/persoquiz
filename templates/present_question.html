@@ -6,7 +6,10 @@
     <h5 class="light">{{ quiz_url }}</h5>
     </div>
 
-    <h2 class="light">{{ quiz.title }}</h2>
+    <h2 class="light">
+        {% if request.user.is_authenticated and question %}<span class=""><a href="{% url 'stop_question' quiz.id question.id %}?view=present" class="btn-floating btn-large waves-effect waves-light red" alt="Frage beenden"><i class="material-icons left">stop</i></a></span>{% endif %}
+        {{ quiz.title }}
+    </h2>
 
     <p>&nbsp;</p>
     {% if question %}
@@ -25,3 +28,4 @@
 {% block javascript_ready_code %}
     window.setInterval(function () {window.location.reload();}, 2500);
 {% endblock %}
+
