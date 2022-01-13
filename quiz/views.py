@@ -192,7 +192,7 @@ class present(View):
         if not question:
             # Old: Only questions with answers
             # question = Question.objects.filter(Exists(Answer.objects.filter(question=OuterRef('pk'))), quiz=quiz, active=False).order_by('-modified').first()
-            question = Question.objects.filter(quiz=quiz, active=False).order_by('-modified').first()
+            question = Question.objects.filter(quiz=quiz, active=False, started_times__gt=0).order_by('-modified').first()
             if question: # if there is a stopped question with answers
                 mode = "answers"
                 num_answers = question.answer_set.all().count()

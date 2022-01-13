@@ -22,11 +22,13 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                {% if request.user.is_authenticated and has_next_question %}
-                    <p style="margin-top:2em;"><a class="waves-effect waves-light btn green" href="{% url 'next_question' quiz.id %}"><i class="material-icons left">skip_next</i>nächste Frage</a></p>
-                {% endif %}
             </div>
         {% endif %}
+        <div class="center">
+            {% if request.user.is_authenticated and has_next_question %}
+                <p style="margin-top:2em;"><br><br><a class="waves-effect waves-light btn green" href="{% url 'next_question' quiz.id %}"><i class="material-icons left">skip_next</i>nächste Frage</a></p>
+            {% endif %}
+        </div>
     </div>
 </div>
 

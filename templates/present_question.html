@@ -1,10 +1,12 @@
 {% extends 'present_base.html' %}
 
 {% block content %}
-    <div style="float:right;width:300px;height:300px;">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ quiz_url }}" width="300" size="300"><br>
-    <h5 class="light">{{ quiz_url }}</h5>
-    </div>
+    {% if question %}
+        <div style="float:right;width:300px;height:300px;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ quiz_url }}" width="300" size="300"><br>
+            <h5 class="light">{{ quiz_url }}</h5>
+        </div>
+    {% endif %}
 
     <h2 class="light">
         {% if request.user.is_authenticated and question %}<span class=""><a href="{% url 'stop_question' quiz.id question.id %}?view=present" class="btn-floating btn-large waves-effect waves-light red" alt="Frage beenden"><i class="material-icons left">stop</i></a></span>{% endif %}
@@ -16,12 +18,16 @@
         <h1 class="header">{{ question.text }}</h1>
         <p>&nbsp;</p>
         <h2 class="light">Abstimmung läuft, bislang {{ num_answers }} Antwort{% if num_answers != 1 %}en{% endif %}.</h2>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <h2 class="light">Rufen Sie {{ quiz_url }} auf,<br/> oder scannen Sie den QR-Code.</h2>
     {% else %}
         <h1 class="header">Derzeit keine laufende Frage vorhanden.</h1>
+        {% if request.user.is_authenticated %}
+            <p style="margin-top:2em;"><br><br><a class="waves-effect waves-light btn green" href="{% url 'next_question' quiz.id %}"><i class="material-icons left">skip_next</i>Erste Frage starten</a></p>
+        {% endif %}
+
     {% endif %}
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <h2 class="light">Rufen Sie {{ quiz_url }} auf,<br/> oder scannen Sie den QR-Code.</h2>
 
 {% endblock %}
 
