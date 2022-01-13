@@ -188,9 +188,11 @@ class present(View):
         question = Question.objects.filter(quiz=quiz, active=True).order_by('-modified').first()
         num_answers = question.answer_set.all().count() if question else 0
 
-        # If not: Take question with answers that was stopped latest
+        # If not: Take question that was stopped latest
         if not question:
-            question = Question.objects.filter(Exists(Answer.objects.filter(question=OuterRef('pk'))), quiz=quiz, active=False).order_by('-modified').first()
+            # Old: Only questions with answers
+            # question = Question.objects.filter(Exists(Answer.objects.filter(question=OuterRef('pk'))), quiz=quiz, active=False).order_by('-modified').first()
+            question = Question.objects.filter(quiz=quiz, active=False).order_by('-modified').first()
             if question: # if there is a stopped question with answers
                 mode = "answers"
                 num_answers = question.answer_set.all().count()
@@ -199,6 +201,7 @@ class present(View):
                     breakpoint = (num_answers+1) // 2
                 else:
                     breakpoint = -1
+                has_next_question = Question.objects.filter(active=False, started_times=0).exists()
                 return render(request, 'present_answers.html', locals())
 
         return render(request, 'present_question.html', locals())
