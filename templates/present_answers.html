@@ -16,19 +16,14 @@
                     <tbody>
                         {% for a in answers %}
                             {% if forloop.counter == breakpoint %} {# ugly hacked way to create second column #}
-                                </tbody></table></div><div class="col s12 m6"><table class="striped"><thead><tr><th>Name</th><th>Antwort</th></tr></thead><tbody>
+                                </tbody></table></div><div class="col s12 m6"><table class="striped"><tbody>
                             {% endif %}
-                            <tr><td>{{ a.username }}</td><td>{{ a.answer }}</td></tr>
+                            <tr><td style="width:auto;white-space:nowrap;">{{ a.username }} &nbsp;</td><td style="width:100%;">{{ a.answer }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         {% endif %}
-        <div class="center">
-            {% if request.user.is_authenticated and has_next_question %}
-                <p style="margin-top:2em;"><br><br><a class="waves-effect waves-light btn green" href="{% url 'next_question' quiz.id %}"><i class="material-icons left">skip_next</i>nächste Frage</a></p>
-            {% endif %}
-        </div>
     </div>
 </div>
 

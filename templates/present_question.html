@@ -20,7 +20,7 @@
         <h2 class="light">Abstimmung läuft, bislang {{ num_answers }} Antwort{% if num_answers != 1 %}en{% endif %}.</h2>
         <p>&nbsp;</p>
         <p>&nbsp;</p>
-        <h2 class="light">Rufen Sie {{ quiz_url }} auf,<br/> oder scannen Sie den QR-Code.</h2>
+        <!--<h2 class="light">Rufen Sie {{ quiz_url }} auf,<br/> oder scannen Sie den QR-Code.</h2>-->
     {% else %}
         <h1 class="header">Derzeit keine laufende Frage vorhanden.</h1>
         {% if request.user.is_authenticated %}
